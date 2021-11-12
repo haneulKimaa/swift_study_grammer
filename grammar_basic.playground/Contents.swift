@@ -30,3 +30,44 @@ func sendmessage3(me: String, friends: String...) -> String {
 }
 sendmessage3(me: "Olive", friends: "aa", "b", "c")
 
+
+// 조건문
+// repeat - while(조건문 체크전에 일단 실행)
+var x = 2
+repeat {
+    x+=2
+    print("value \(x)")
+} while x<2
+
+// while : 출력 없음
+x = 2
+while x<2 {
+    x+=2
+    print("value \(x)")
+}
+
+
+// 옵셔널 : nil값일 수 있는 값
+var optionalString: String? = nil
+var notOptionalString: String = " aloha"
+print(optionalString) // nil
+optionalString = "olive"
+print(optionalString) // Optional("olive") -> 연산 안됨
+//print(optionalString+notOptionalString) // Optional("olive") -> 오류(언랩핑 필요)
+
+// 옵셔널 바인딩 : 3가지 방법 존재(1,2 뉘앙스 다름)
+// 1. if let : 값이 있으면 가져와라
+if let testStr = optionalString {
+    print("if let : "+testStr+notOptionalString)
+}
+
+// 2. guard let : 값이 없으면 실행해라.
+func test() {
+    guard let testStr2 = optionalString else {
+        return
+    }
+    print("guard let : "+testStr2+notOptionalString)
+}
+test()
+// 3. 강제 언랩핑
+print("force unwrapping : "+optionalString!+notOptionalString)
