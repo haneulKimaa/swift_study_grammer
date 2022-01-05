@@ -168,7 +168,7 @@ dog.age = 11
 
 let dog2 = dog
 dog2.name = "gin"
-dog2.introduce() // my gin, 11
+// dog2.introduce() // my gin, 11
 
 
 // 고차함수
@@ -203,19 +203,29 @@ let sum2: Int = num.reduce(0) {$0*$1}
 sum2
 
 // assert
-// 디버깅모드에서만 사용 가능
+// 디버깅 모드에서만 사용 가능
 // 코드가 실행될 때 반드시 만족해야하는 상황에서 사용한다.
 var someInt: Int = 0
-// Page_Contents/main.swift:164: Assertion failed: someInt != 0
-assert(someInt == 0, "someInt != 0")
+// assert 오류!
+//assert(someInt == 1, "someInt가 0이 아님!")
 print("i don't know") // 출력되지 않음
 
-//guard var a: Int? = someInt else {
-//    return 1
-//}
-//print("\(a)")
+// guard
 // 빠른 종료(early exit)를 위해서 사용
 // 디버깅뿐만 아니라 어떤 조건에서도 사용 가능
 // else문 내에 코드블럭을 종료하는 지시어가 반드시 있어야함
+var someInt2: Int?
+func runGuard() {
+    guard let a = someInt2 else {
+        print("someInt2 is nil")
+        return
+    }
+    print("\(a)")
+}
+someInt2 = nil
+runGuard() // someInt2 is nil
+someInt2 = 24
+runGuard() // 24
+//print("\(a)")
 
 
