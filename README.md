@@ -1,12 +1,20 @@
 # :rocket: Swift 문법 공부
 
 ## 목차
-- [함수 종류](#sparkles-함수-종류)<br>
-- [조건문](#sparkles-조건문) <br>
-- [옵셔널](#sparkles-옵셔널) <br>
-　+ [옵셔널 바인딩](#sparkles-옵셔널-바인딩)
-
-- [구조체](#sparkles-구조체) <br>
+1. [함수 종류](#sparkles-함수-종류)<br>
+2. [조건문](#sparkles-조건문) <br>
+3. [옵셔널](#sparkles-옵셔널) <br>
+    3-1. [암시적 추출 옵셔널](#heavy_exclamation_mark-암시적-추출-옵셔널-implicitly-unwrapped-optionals) <br>
+    3-2. [옵셔널 바인딩](#heavy_exclamation_mark-옵셔널-바인딩-optional-binding) <br>
+4. [구조체](#sparkles-구조체) <br>
+5. [클래스](#sparkles-클래스) <br>
+    5-1. [클래스와 구조체의 차이점](#heavy_exclamation_mark-클래스와-구조체의-차이점) <br>
+    5-2. [클래스 초기화](#heavy_exclamation_mark-클래스-초기화-initializers) <br>
+　5-2-1. [실패 가능한 초기화](#heavy_exclamation_mark-실패-가능한-초기화) <br>
+    5-3. [deinitializers](#heavy_exclamation_mark-deinitializers) <br>
+6. [고차함수](#sparkles-고차함수) <br>
+7. [assert](#sparkles-assert) <br>
+8. [guard](#sparkles-guard) <br>
 
 
 --------
@@ -71,8 +79,30 @@ optionalString = "olive"
 print(optionalString) // Optional("olive") -> 연산 안됨
 //print(optionalString+notOptionalString) // Optional("olive") -> 오류(언랩핑 필요)
 ```
+
 <br><br>
-### :heavy_exclamation_mark: 옵셔널 바인딩
+
+### :heavy_exclamation_mark: 암시적 추출 옵셔널 (Implicitly Unwrapped Optionals)
+> 매번 옵셔널 바인딩하는 것이 불팰요할 때 사용한다.
+> 옵셔널과 같으나 nil이 할당되어있을 때 접근하려고 하면 오류가 난다.
+<br>
+
+선언 
+```Swift
+var owner: Person!
+```
+<details markdown="1">
+<summary>접근시 나는 오류 메시지</summary>
+
+error: Execution was interrupted, reason: EXC_BAD_INSTRUCTION (code=EXC_I386_INVOP, subcode=0x0).
+The process has been left at the point where it was interrupted, use "thread return -x" to return to the state before expression evaluation. <br>
+__lldb_expr_12/grammar_basic.playground:153: Fatal error: Unexpectedly found nil while implicitly unwrapping an Optional value<br>
+
+</details>
+
+<br><br>
+
+### :heavy_exclamation_mark: 옵셔널 바인딩 (Optional Binding)
 > 옵셔널타입은 바로 사용할 수 없음(바로 연산, 출력 불가능) 
 > 3가지 방법. if let과 guard let의 뉘앙스 차이가 있다!
 1. if let : 값이 있으면 가져와라
@@ -90,7 +120,7 @@ func test() {
     print("guard let : "+testStr2+notOptionalString)
 }
 ```
-3. 강제 언랩핑
+3. 강제 언랩핑 (Forced Unwrapping)
 ```Swift
 print("force unwrapping : "+optionalString!+notOptionalString)
 ```
@@ -119,6 +149,7 @@ print(stringToInt+1)
 ```
 
 <br><br>
+
 ## :sparkles: 구조체
 ```Swift
 struct User {
@@ -146,7 +177,8 @@ class Dog {
     var age: Int = 0
     
     init() {
-        
+        self.name = name
+        self.age = age
     }
     func introduce() {
         print("my \(name), \(age)")
@@ -158,7 +190,89 @@ dog.name = "bin"
 dog.age = 11
 dog.introduce() // my bin, 11
 ```
+<br>
+
+### :heavy_exclamation_mark: 클래스와 구조체의 차이점
+
+|항목|Class|Struct|
+|---|---|---|
+|타입|참조|값|
+|상속|가능|불가능|
+|형변환(상위 또는 하위 클래스 타입으로)|가능|불가능|
+|디이널라이저|가능|불가능|
+|참조 횟수 계산|가능|불가능|
+
+#### 참조 타입이란?
+> 값이 복사되는 것이 아닌 메모리를 참조한다.
+```Swift
+var dog = Dog()
+dog.name = "bin"
+dog.age = 11
+dog.introduce() // my bin, 11
+let dog2 = dog
+dog2.name = "gin"
+dog2.introduce() // my gin, 11
+```
+위에서 dog2는 dog가 복사된 것이 아닌 dog가 가리키는 값을 참조하기 때문에 상수로 선언되어도 값이 변경 가능하다.
 <br><br>
+
+### :heavy_exclamation_mark: 클래스 초기화 (initializers)
+> 생성자(기본 형태)
+```Swift
+init(name: String, age: Int) {
+        self.name = name
+        self.age = age
+    }
+```
+> 자신 클래스의 생성자를 받아와서 사용하는 경우
+```Swift
+convenience init(name: String, age: Int, nickname: String) {
+    // 중복코드 줄이기
+    // 생성자에 convenience가 붙어야함
+    self.init(name: name, age: age)
+    self.nickname = nickname
+}
+```
+<br>
+
+### :heavy_exclamation_mark: 실패 가능한 초기화
+> 인스턴스 생성시 옵셔널로 생성해야한다.
+<br>
+선언 <br>
+
+```Swift
+init?(age: Int){
+    if (0...120).contains(age) == false {
+        return nil
+    }
+}
+```
+
+인스턴스 생성<br>
+
+```Swift
+var aPerson: Person? = Person(age: 130, name: "Olive")
+print("aPerson is \(aPerson)") // aPerson is nil
+```
+<br>
+
+### :heavy_exclamation_mark: deinitializers
+> 클래스의 인스턴스가 메모리에서 해제되는 시점에 호출된다.
+> 매개변수를 가질 수 없다.
+<br>
+
+```Swift
+deinit {
+    print("\(name)이 삭제되었습니다.")
+}
+```
+
+```Swift
+aPerson = nil // Olive이 삭제되었습니다.
+```
+
+<br>
+
 ## :sparkles: 고차함수
 > 전달인자를 함수로 전달받거나 함수 실행의 결과를 함수로 반환하는 함수
 
@@ -192,25 +306,7 @@ let sum: Int = num.reduce(0, {(first: Int, second: Int) -> Int in
 })
 let sum2: Int = num.reduce(0) {$0*$1}
 ```
-### :heavy_exclamation_mark: 클래스와 구조체의 차이점
 
-|항목|Class|Struct|
-|---|---|---|
-|타입|참조|값|
-|상속|가능|불가능|
-|형변환(상위 또는 하위 클래스 타입으로)|가능|불가능|
-|디이널라이저|가능|불가능|
-|참조 횟수 계산|가능|불가능|
 
-#### 참조 타입이란?
-> 값이 복사되는 것이 아닌 메모리를 참조한다.
-```Swift
-var dog = Dog()
-dog.name = "bin"
-dog.age = 11
-dog.introduce() // my bin, 11
-let dog2 = dog
-dog2.name = "gin"
-dog2.introduce() // my gin, 11
-```
-위에서 dog2는 dog가 복사된 것이 아닌 dog가 가리키는 값을 참조하기 때문에 상수로 선언되어도 값이 변경 가능하다.
+
+
