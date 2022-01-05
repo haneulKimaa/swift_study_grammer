@@ -14,7 +14,6 @@
     5-3. [deinitializers](#heavy_exclamation_mark-deinitializers) <br>
 6. [고차함수](#sparkles-고차함수) <br>
 7. [assert](#sparkles-assert) <br>
-8. [guard](#sparkles-guard) <br>
 
 
 --------
@@ -103,8 +102,8 @@ __lldb_expr_12/grammar_basic.playground:153: Fatal error: Unexpectedly found nil
 <br><br>
 
 ### :heavy_exclamation_mark: 옵셔널 바인딩 (Optional Binding)
-> 옵셔널타입은 바로 사용할 수 없음(바로 연산, 출력 불가능) 
-> 3가지 방법. if let과 guard let의 뉘앙스 차이가 있다!
+> 옵셔널타입은 바로 사용할 수 없음(바로 연산, 출력 불가능) <br>
+> 3가지 방법. if let과 guard let의 뉘앙스 차이가 있다! <br>
 1. if let : 값이 있으면 가져와라
 ```Swift
 if let testStr = optionalString {
@@ -112,14 +111,25 @@ if let testStr = optionalString {
 }
 ```
 2. guard let : 값이 없으면 실행해라.
+> 빠른 종료(early exit)를 위해서 사용 <br>
+> 디버깅뿐만 아니라 어떤 조건에서도 사용 가능 <br>
+> else문 내에 코드블럭을 종료하는 지시어가 반드시 있어야함 <br>
 ```Swift
-func test() {
-    guard let testStr2 = optionalString else {
+var someInt2: Int?
+func runGuard() {
+    guard let a = someInt2 else {
+        print("someInt2 is nil")
         return
     }
-    print("guard let : "+testStr2+notOptionalString)
+    print("\(a)")
 }
+someInt2 = nil
+runGuard() // someInt2 is nil
+someInt2 = 24
+runGuard() // 24
 ```
+<br>
+
 3. 강제 언랩핑 (Forced Unwrapping)
 ```Swift
 print("force unwrapping : "+optionalString!+notOptionalString)
@@ -257,8 +267,8 @@ print("aPerson is \(aPerson)") // aPerson is nil
 <br>
 
 ### :heavy_exclamation_mark: deinitializers
-> 클래스의 인스턴스가 메모리에서 해제되는 시점에 호출된다.
-> 매개변수를 가질 수 없다.
+> 클래스의 인스턴스가 메모리에서 해제되는 시점에 호출된다.<br>
+> 매개변수를 가질 수 없다. <br>
 <br>
 
 ```Swift
@@ -306,7 +316,25 @@ let sum: Int = num.reduce(0, {(first: Int, second: Int) -> Int in
 })
 let sum2: Int = num.reduce(0) {$0*$1}
 ```
+<br>
 
+## :sparkles: assert
+> 디버깅 모드에서만 사용 가능 <br>
+> 코드가 실행될 때 반드시 만족해야하는 상황에서 사용한다. <br>
+> assert는 주장한다는 의미로, 디버깅시 "이 값이 나와야해!"조건의 검증을 위해 사용한다. <br>
+> assert(조건, 실패시 출력할 메시지) <br>
+```Swift
+var someInt: Int = 0
+assert(someInt == 1, "someInt가 0이 아님!")
+print("i don't know") // 출력되지 않음
+```
+<details markdown="1">
+<summary>assert문에서 나는 오류 메시지</summary>
 
+error: Execution was interrupted, reason: EXC_BAD_INSTRUCTION (code=EXC_I386_INVOP, subcode=0x0).
+The process has been left at the point where it was interrupted, use "thread return -x" to return to the state before expression evaluation. <br>
+__lldb_expr_27/grammar_basic.playground:210: Assertion failed: someInt가 0이 아님!<br>
+
+</details>
 
 
