@@ -1,5 +1,9 @@
 # :rocket: Swift 문법 공부
 
+개인 공부 목적의 코드입니다 :)
+
+---
+
 ## 목차
 1. [함수 종류](#sparkles-함수-종류)<br>
 2. [조건문](#sparkles-조건문) <br>
@@ -451,6 +455,9 @@ enum PhoneError2: Error {
 ```
 
 ### :heavy_exclamation_mark: Swift에서 오류를 처리하는 4가지 방법
+<img src="https://user-images.githubusercontent.com/63438947/148641910-f1769479-1c88-486b-bf79-0bf59a776ca6.jpeg"  width="700" height="370"> 
+<br>
+
 1. 함수에서 발생한 오류를 해당 함수를 호출한 코드에 전파
 ```Swift
 func checkPhoneBatteryStatus(batterLevel: Int) throws -> String {
