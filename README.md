@@ -3,18 +3,24 @@
 ## 목차
 1. [함수 종류](#sparkles-함수-종류)<br>
 2. [조건문](#sparkles-조건문) <br>
-3. [옵셔널](#sparkles-옵셔널) <br>
-    3-1. [암시적 추출 옵셔널](#heavy_exclamation_mark-암시적-추출-옵셔널-implicitly-unwrapped-optionals) <br>
-    3-2. [옵셔널 바인딩](#heavy_exclamation_mark-옵셔널-바인딩-optional-binding) <br>
+3. [옵셔널](#sparkles-옵셔널) <br>  
+    옵셔널을 다루는 다섯 가지 방법 <br>
+    1. [암시적 추출 옵셔널](#1-암시적-추출-옵셔널-implicitly-unwrapped-optionals) <br>
+    2. [옵셔널 바인딩](#2-옵셔널-바인딩-optional-binding) <br>
+    3. [강제 언랩핑](#3-강제-언랩핑-forced-unwrapping) <br>
+    4. [묵시적 해제](#4-묵시적-해제)
+    5. [옵셔널 체이닝](#5-옵셔널-체이닝)
+    
 4. [구조체](#sparkles-구조체) <br>
-5. [클래스](#sparkles-클래스) <br>
+5. [클래스](#sparkles-클래스) <br>  
     5-1. [클래스와 구조체의 차이점](#heavy_exclamation_mark-클래스와-구조체의-차이점) <br>
     5-2. [클래스 초기화](#heavy_exclamation_mark-클래스-초기화-initializers) <br>
 　5-2-1. [실패 가능한 초기화](#heavy_exclamation_mark-실패-가능한-초기화) <br>
     5-3. [deinitializers](#heavy_exclamation_mark-deinitializers) <br>
 6. [고차함수](#sparkles-고차함수) <br>
 7. [assert](#sparkles-assert) <br>
-
+8. [enum](#sparkles-enum) <br>
+9. [에러 처리](#sparkles-에러-처리) <br>
 
 --------
 
@@ -80,8 +86,9 @@ print(optionalString) // Optional("olive") -> 연산 안됨
 ```
 
 <br><br>
+### :heavy_exclamation_mark: 옵셔널을 다루는 다섯 가지 방법
 
-### :heavy_exclamation_mark: 암시적 추출 옵셔널 (Implicitly Unwrapped Optionals)
+### 1. 암시적 추출 옵셔널 (Implicitly Unwrapped Optionals)
 > 매번 옵셔널 바인딩하는 것이 불팰요할 때 사용한다.
 > 옵셔널과 같으나 nil이 할당되어있을 때 접근하려고 하면 오류가 난다.
 <br>
@@ -101,7 +108,7 @@ __lldb_expr_12/grammar_basic.playground:153: Fatal error: Unexpectedly found nil
 
 <br><br>
 
-### :heavy_exclamation_mark: 옵셔널 바인딩 (Optional Binding)
+### 2. 옵셔널 바인딩 (Optional Binding)
 > 옵셔널타입은 바로 사용할 수 없음(바로 연산, 출력 불가능) <br>
 > 3가지 방법. if let과 guard let의 뉘앙스 차이가 있다! <br>
 1. if let : 값이 있으면 가져와라
@@ -130,12 +137,14 @@ runGuard() // 24
 ```
 <br>
 
-3. 강제 언랩핑 (Forced Unwrapping)
+### 3. 강제 언랩핑 (Forced Unwrapping)
 ```Swift
 print("force unwrapping : "+optionalString!+notOptionalString)
 ```
 
-4. 묵시적 해제 : 컴파일러에 의한 자동 해제 <br>
+### 4. 묵시적 해제
+> 컴파일러에 의한 자동 해제 <br>
+
 - 비교연산자를 통해 값을 비교하면 자동으로 변환.
 ```Swift
 var optionalInt: Int? = 6
@@ -157,7 +166,23 @@ var stringToInt: Int! = Int(string)
 // 바인딩해야 출력 가능
 print(stringToInt+1)
 ```
+<br>
 
+### 5. 옵셔널 체이닝
+> 완전히 옵셔널을 벗겨내지 않고 접근할 때 사용 <br>
+
+```Swift
+struct Developer {
+    var name: String
+}
+struct Company {
+    var name: String
+    var developer: Developer?
+}
+var developer = Developer(name: "Mark")
+var company = Company(name: "Olive", developer: developer)
+print(company.developer?.name) // Optional("Mark")
+```
 <br><br>
 
 ## :sparkles: 구조체
@@ -337,4 +362,124 @@ __lldb_expr_27/grammar_basic.playground:210: Assertion failed: someInt가 0이 �
 
 </details>
 
+<br><br>
 
+## :sparkles: enum
+1. 연관된 항목을 나열 <br>
+2. 새로운 타입처럼 사용 가능해서 class처럼 대문자로 선언 <br>
+3. 각 항목은 항목의 원시값(rawValue)을 가지게 할 수 있음(특정 타입으로 선언 가능) <br>
+> 다른 언어에서는 Integer타입 원시값만 가질 수 있지만 swift는 String, Character, Number Type 가능 <br>
+> 모든 케이스가 동일한 형식을 사용해야함 <br>
+
+```Swift
+enum CompassPoint: String {
+    case north = "북"
+    case south = "남"
+    case east = "동"
+    case west
+}
+var direction: CompassPoint = .north
+direction = .south
+switch direction {
+case .north:
+    print(direction.rawValue)
+case .south:
+    print(direction.rawValue)
+case .east:
+    print(direction.rawValue)
+case .west:
+    print(direction.rawValue)
+}
+```
+<br>
+
+3-1. 생성자 매개변수로 rawValue를 넘겨 항목을 알 수 있음
+> 없을 경우 nil을 리턴(생성자는 옵셔널) <br>
+```Swift
+let direction2 = CompassPoint(rawValue: "남")
+
+enum Task: Int {
+    case morning, afternoon = 100, evening
+}
+enum Score: Character {
+    case math = "A"
+    case science = "B"
+    // 원시값이 Charater형일 때 모든 항목을 직접 할당해줘야함
+    // case evening
+}
+// 원시값 선언하지 않을 경우 항목명으로 들어감
+// 원시값이 Int형일 경우 0부터. 선언한 값이 있다면 그 이후부터 1씩 올라감
+CompassPoint.west.rawValue // west
+Task.morning.rawValue // 0
+Task.afternoon.rawValue // 100
+Task.evening.rawValue // 101
+```
+<br>
+
+4. 연관값(associated value)을 가질 수 있음
+> 항목과 연관된 다른 타입의 값을 저장할 때 사용
+<br>
+
+```Swift
+enum PhoneError {
+    case unknown
+    case batteryLow(String, Int)
+    
+}
+let error = PhoneError.batteryLow("배터리가 곧 방전됩니다. ", 5)
+switch error {
+case .batteryLow(let message, let percent):
+    print("\(message)\(percent)퍼센트 입니다.")
+case .unknown:
+    print("알 수 없는 에러입니다.")
+}
+// 배터리가 곧 방전됩니다. 5퍼센트 입니다.
+```
+<br>
+
+## :sparkles: 에러 처리
+> 프로그램 내에 에러가 발생한 상황에 대응하고 복구하는 과정 <br>
+> 런타임에 에러가 발생한 경우 <br>
+> 1. 발생(throwing) 2. 감지(catching) 3. 전파(propagaing) 4. 조작(manipulating) <br>
+
+에러 프로토콜 채택한 열거형 선언
+```Swift
+enum PhoneError2: Error {
+    case unknown
+    case batteryLow(batteryLevel: Int)
+}
+```
+
+### :heavy_exclamation_mark: Swift에서 오류를 처리하는 4가지 방법
+1. 함수에서 발생한 오류를 해당 함수를 호출한 코드에 전파
+```Swift
+func checkPhoneBatteryStatus(batterLevel: Int) throws -> String {
+    guard batterLevel != -1 else {
+        throw PhoneError2.unknown
+    }
+    guard batterLevel >= 20 else {
+        throw PhoneError2.batteryLow(batteryLevel: 20)
+    }
+    return "배터리 상태가 정상입니다."
+}
+```
+<br>
+
+2. do catch로 해결
+> 오류 발생을 전달받은 코드블록에서 do catch로 오류 처리 <br>
+> do에서 오류를 던지고 catch에서 오류를 전달받아 예외처리
+```Swift
+do {
+    try checkPhoneBatteryStatus(batterLevel: -1)
+} catch PhoneError2.unknown{
+    print("알 수 없는 에러")
+} catch PhoneError2.batteryLow(let batteryLabel) {
+    print("배터리 전원 부족 남은 배터리 : \(batteryLabel)")
+} catch {
+    print("그 외 오류 발생 : \(error)")
+}
+```
+<br>
+
+3. optional 값으로 처리
+4. 오류가 나지 않을 것으로 확신
