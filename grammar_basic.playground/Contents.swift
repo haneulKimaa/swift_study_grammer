@@ -114,6 +114,12 @@ print(stringToInt+1)
 // 옵셔널과 같으나 nil이 할당되어있을 때 접근하려고 하면 오류가 난다.
 var owner: Person!
 
+// 6. nil 병합 연산자(Nil Coalescing)
+// 옵셔널 변수가 nil일 경우 반환하는 값을 명시한다.
+var nilC: Int?
+var num22 = nilC ?? 5
+print(num22) // 5
+
 // 구조체
 struct User {
     var nickname: String
@@ -324,7 +330,7 @@ enum PhoneError2: Error {
 }
 
 // 에러 발생 예상 부분에 throw로 오류를 던짐 -> 오류 발생시 이후 코드는 실행되지 않음
-throw PhoneError2.batteryLow(batteryLevel: 20)
+// "olive" == "Olive" throw PhoneError2.batteryLow(batteryLevel: 20)
 // Swift에서 오류를 처리하는 방법 4가지
 // 1. 함수에서 발생한 오류를 해당 함수를 호출한 코드에 전파
 func checkPhoneBatteryStatus(batterLevel: Int) throws -> String {
@@ -350,3 +356,5 @@ do {
 }
 // 3. optional 값으로 처리
 // 4. 오류가 나지 않을 것으로 확신
+
+
