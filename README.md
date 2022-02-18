@@ -14,6 +14,7 @@
     3. [강제 언랩핑](#3-강제-언랩핑-forced-unwrapping) <br>
     4. [묵시적 해제](#4-묵시적-해제)
     5. [옵셔널 체이닝](#5-옵셔널-체이닝)
+    6. [nil 병합 연산자](#6-nil-병합-연산자)
     
 4. [구조체](#sparkles-구조체) <br>
 5. [클래스](#sparkles-클래스) <br>  
@@ -187,8 +188,17 @@ var developer = Developer(name: "Mark")
 var company = Company(name: "Olive", developer: developer)
 print(company.developer?.name) // Optional("Mark")
 ```
-<br><br>
+<br>
 
+### 6. nil 병합 연산자
+> 옵셔널 변수가 nil일 경우 반환하는 값을 명시한다. <br>
+
+```Swift
+var nilC: Int?
+var num22 = nilC ?? 5
+print(num22) // 5
+```
+<br><br>
 ## :sparkles: 구조체
 ```Swift
 struct User {
