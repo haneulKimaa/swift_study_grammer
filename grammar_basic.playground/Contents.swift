@@ -262,6 +262,8 @@ runGuard() // 24
 // 3. 각 항목은 항목의 원시값(rawValue)을 가지게 할 수 있음(특정 타입으로 선언 가능)
 // 다른 언어에서는 Integer타입 원시값만 가질 수 있지만 swift는 String, Character, Number Type 가능
 // 모든 케이스가 동일한 형식을 사용해야함
+
+// raw value를 할당한 경우
 enum CompassPoint: String {
     case north = "북"
     case south = "남"
@@ -287,12 +289,27 @@ let direction2 = CompassPoint(rawValue: "남")
 enum Task: Int {
     case morning, afternoon = 100, evening
 }
+enum Planet: Int {
+    case mercury = 1, venus, earth, mars, jupiter, saturn, uranus, neptune
+}
+let earth = Planet(rawValue: 3)
+print(earth!) // earth
+
+
 enum Score: Character {
     case math = "A"
     case science = "B"
     // 원시값이 Charater형일 때 모든 항목을 직접 할당해줘야함
     // case evening
 }
+
+// 4. 재귀 열거형 indirect
+enum ArithmeticExpression {
+    case number(Int)
+    indirect case addition(ArithmeticExpression, ArithmeticExpression)
+    indirect case multiplication(ArithmeticExpression, ArithmeticExpression)
+}
+
 // 원시값 선언하지 않을 경우 항목명으로 들어감
 // 원시값이 Int형일 경우 0부터. 선언한 값이 있다면 그 이후부터 1씩 올라감
 CompassPoint.west.rawValue // west
