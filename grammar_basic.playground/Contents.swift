@@ -409,5 +409,19 @@ class closureTestClass {
     }
 }
 
-
+// type property
+class SomeClass {
+    static var storedTypeProperty = "Some value."
+    static var computedTypeProperty: Int {
+        return 27
+    }
+    class var overrideableComputedTypeProperty: Int { // 이녀석만 재정의 가능
+        return 107
+    }
+}
+class ChildClass: SomeClass {
+    override static var overrideableComputedTypeProperty: Int {
+        return 20
+    }
+}
 
