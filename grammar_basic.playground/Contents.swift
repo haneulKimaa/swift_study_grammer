@@ -129,6 +129,14 @@ struct User {
         print("\(nickname) : \(age)")
     }
 }
+// memberwise가 아닌 custom Initializer
+extension User {
+    init(nickname: String) {
+        self.nickname = nickname
+        self.age = 24
+    }
+}
+
 // 구조체 - 인스턴스 생성
 var user = User(nickname: "olive", age: 23)
 user.information() // olive : 23
@@ -373,5 +381,33 @@ do {
 }
 // 3. optional 값으로 처리
 // 4. 오류가 나지 않을 것으로 확신
+
+// Escaping
+// 1. 함수의 밖의 변수에 저장되거나
+// 2. 함수가 종료된 뒤 실행
+// non-Escaping Closure
+func runClosure(closure: () -> Void) {
+    print("전")
+    closure()
+    print("후")
+}
+runClosure {
+    print("runClosure")
+}
+//전
+//runClosure
+//후
+
+class closureTestClass {
+    // 얘는 @escape closure
+    var property: (() -> Void)?
+    
+    func closureTestFunction(closure: @escaping () -> Void) {
+        // 인자 closure는 non-escaping => 할당 불가
+        // non es-는 es에 할당할 수 없지만 반대로 es는 non에 할당가능
+        self.property = closure
+    }
+}
+
 
 
