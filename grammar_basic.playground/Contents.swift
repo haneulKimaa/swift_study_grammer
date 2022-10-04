@@ -3,6 +3,7 @@
 import UIKit
 import Foundation
 
+/*
 // 함수 종류
 // 1. 기본형
 func sum(a: Int, b: Int) -> Int {
@@ -32,6 +33,15 @@ func sendmessage3(me: String, friends: String...) -> String {
     return "Hello \(friends)! my name is \(me)"
 }
 sendmessage3(me: "Olive", friends: "aa", "b", "c")
+
+
+// 5. inout 매개변수 (함수 내부에서 매개변수가 변경되는 경우. 파라미터가 참조타입이 됨)
+func sendmessage4( me: inout String, friends: String) -> String {
+    me = "김" + me
+ return "Hello \(friends)! my name is \(me)"
+}
+var a = "aa"
+sendmessage4(me: &a, friends: "bb")
 
 
 // 조건문
@@ -425,3 +435,31 @@ class ChildClass: SomeClass {
     }
 }
 
+
+// 포인터 주소값 출력
+var number: Int = 3
+var number2: Int = 4
+withUnsafePointer(to: &number) { pointer in
+    print(pointer) // 0x000000010e787098 -> 4537741464(10)
+}
+withUnsafePointer(to: &number2) { pointer in
+    print(pointer) // 0x000000010e7870a0 -> 4537741472(10)
+}
+
+var ex1: Int = 3
+var ex2: Int = 4
+var arr: [Int] = []
+arr.append(ex1)
+arr.append(ex2)
+
+withUnsafePointer(to: &arr[0]) { pointer in
+    print(pointer) // 0x0000600003efe360
+}
+withUnsafePointer(to: &arr[1]) { pointer in
+    print(pointer) // 0x0000600003efe368
+}
+
+print(String(Int.min, radix: 2)) // 1000000000000000000000000000000000000000000000000000000000000000 -> 64비트의 최소값
+print(String(Int.max, radix: 2)) // 111111111111111111111111111111111111111111111111111111111111111 -> 64비트의 최대값
+
+ */
